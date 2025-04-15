@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Predict Habitability</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- W3.CSS -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #eee;
+      font-family: 'Lucida Console', monospace;
+      background-image: url("https://t3.ftcdn.net/jpg/05/09/17/06/360_F_509170615_yVX5ICtGA4Y5HMB4toYNLw4RIQAcOgdK.jpg");
+    }
+
+    h1, h2 {
+      color: #00e1fff5;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    img:hover {
+      opacity: 0.5;
+    }
+
+    .form-card {
+      background-color: #1b1b1b;
+      border: 1px solid #333;
+      color: #eee;
+      box-shadow: 0 0 12px #00e1ff33;
+      padding: 32px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+
+    .w3-input {
+      background-color: #121212;
+      color: #ffffff;
+      border: 1px solid #00e1ff88;
+    }
+
+    .w3-input:focus {
+      outline: none;
+      border-color: #00e1ff;
+      box-shadow: 0 0 8px #00e1ff99;
+    }
+
+    .w3-button:hover {
+      background-color: #fff !important;
+      color: #000 !important;
+    }
+
+    .caption {
+      font-size: 14px;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .prediction-box {
+      background-color: #121212;
+      color: #00e1fff5;
+      border: 1px solid #00e1fff5;
+      padding: 16px;
+      text-align: center;
+      margin: 20px auto;
+      width: fit-content;
+      border-radius: 10px;
+      font-size: 1.4em;
+      box-shadow: 0 0 10px #00e1ff66;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar (same as other pages) -->
+<div class="w3-top w3-bar w3-black w3-large">
+  <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+  <a href="/analysis" class="w3-bar-item w3-button w3-padding-large">DATA ANALYSIS</a>
+  <a href="/predict_type" class="w3-bar-item w3-button w3-padding-large">PREDICT TYPE</a>
+  <a href="/predict_habitability" class="w3-bar-item w3-button w3-padding-large w3-white">PREDICT HABITABILITY</a>
+  <a href="/clustering" class="w3-bar-item w3-button w3-padding-large">CLUSTERING</a>
+</div>
+
+<!-- Page Content -->
+<div style="margin-top:90px">
+  <h1>Habitability Prediction</h1>
+
+  {% if not result %}
+  <!-- Form -->
+  <form method="POST" class="form-card">
+    <div class="w3-section">
+      <label class="w3-text-cyan">Mass (Earth units)</label>
+      <input class="w3-input w3-round" type="number" name="mass" value="{{ mass }}" min="0" step="any" required>
+    </div>
+    <div class="w3-section">
+      <label class="w3-text-cyan">Radius (Earth units)</label>
+      <input class="w3-input w3-round" type="number" name="radius" value="{{ radius }}" min="0" step="any" required>
+    </div>
+    <div class="w3-section">
+      <label class="w3-text-cyan">Orbital Radius (AU)</label>
+      <input class="w3-input w3-round" type="number" name="orbital_radius" value="{{ orbital_radius }}" min="0" step="any" required>
+    </div>
+    <div class="w3-section">
+      <label class="w3-text-cyan">Eccentricity</label>
+      <input class="w3-input w3-round" type="number" name="eccentricity" value="{{ eccentricity }}" min="0" step="any" required>
+    </div>
+    <button class="w3-button w3-round w3-block" type="submit">🔮 Predict</button>
+  </form>
+  {% endif %}
+
+  {% if result is not none %}
+    <div class="w3-center" style="margin-top: 20px;">
+      <a href="{{ url_for('predict_habitability') }}" class="w3-button w3-round w3-large" style="background-color:#00e1ff; color:#fff;">🔁 Try Again</a>
+    </div>
+    <div class="prediction-box">
+      Habitability Result: {{ 'Habitable' if result else 'Not Habitable' }}
+    </div>
+  {% endif %}
+
+  <!-- Visuals -->
+  <h2>Habitability Analysis Visuals</h2>
+  <div class="w3-row-padding w3-margin-top">
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/habitable_cm.png') }}" onclick="showModal(this, 'Confusion matrix: habitability classification.')">
+      <div class="caption">Confusion matrix reveals accurate identification of habitable vs. non-habitable planets with few misclassifications.</div>
+    </div>
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/habitable_cr.png') }}" onclick="showModal(this, 'Classification report of habitability model.')">
+      <div class="caption">Precision and recall metrics suggest balanced performance for binary habitability classification.</div>
+    </div>
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/habitable_fimp.png') }}" onclick="showModal(this, 'Feature importance showing critical attributes.')">
+      <div class="caption">Orbital parameters, particularly eccentricity and orbital radius, emerge as key predictors of habitability.</div>
+    </div>
+    <div class="w3-row-padding w3-margin-top">
+        <div class="w3-half w3-card">
+          <img src="{{ url_for('static', filename='images/habitable_plt.png') }}">
+          <div class="caption">Scatter plot reveals clear separability between classes in reduced-dimensional space.</div>
+        </div>
+        <div class="w3-half w3-card">
+          <img src="{{ url_for('static', filename='images/habitable_tree.png') }}">
+          <div class="caption">Decision tree structure outlines interpretable rules for habitability based on feature thresholds.</div>
+</div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="imgModal" class="w3-modal" onclick="this.style.display='none'">
+  <span class="w3-button w3-hover-red w3-xxlarge w3-display-topright">&times;</span>
+  <div class="w3-modal-content w3-black w3-center w3-animate-opacity" style="padding:32px">
+    <img id="modalImg" style="max-width:100%; border-radius: 10px;">
+    <p id="modalCaption" class="caption" style="margin-top: 12px;"></p>
+  </div>
+</div>
+
+<!-- Script -->
+<script>
+  function showModal(img, caption) {
+    document.getElementById('imgModal').style.display = 'block';
+    document.getElementById('modalImg').src = img.src;
+    document.getElementById('modalCaption').textContent = caption;
+  }
+
+  document.querySelector("form")?.addEventListener("submit", function (e) {
+    const fields = ["mass", "radius", "orbital_radius", "eccentricity"];
+    for (let field of fields) {
+      let value = parseFloat(document.querySelector(`[name="${field}"]`).value);
+      if (isNaN(value) || value < 0) {
+        alert(`${field} must be a valid positive number.`);
+        e.preventDefault();
+        return false;
+      }
+    }
+  });
+
+  window.onload = function () {
+    const cards = document.querySelectorAll('.w3-card, .w3-third, .w3-half');
+    cards.forEach(card => {
+      const img = card.querySelector('img');
+      const caption = card.querySelector('.caption')?.textContent;
+      if (img && caption) {
+        img.setAttribute('onclick', `showModal(this, \`${caption}\`)`);
+      }
+    });
+  };
+</script>
+
+</body>
+</html>

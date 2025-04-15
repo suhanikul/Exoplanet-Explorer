@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exoplanet Explorer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- W3.CSS Framework -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orbitron|Roboto+Mono&display=swap">
+  <style>
+    body {
+      font-family:'Lucida Console', monospace;
+      background-color: #0a0a0a;
+      color: #eeeeee;
+    }
+
+    h1{
+        font-family: sans-serif;
+        color: white;
+    }
+
+    h2, h3 {
+      font-family: sans-serif;
+      color: #00e1fff5;
+    }
+
+    .hero {
+      background-image: url("https://wallpapers.com/images/hd/deep-space-hd-ugo2qzs6p1r102h8.jpg");
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .hero-text {
+      text-shadow: 2px 2px 6px #000;
+      color: white;
+    }
+
+    .card-section {
+      padding: 48px 16px;
+    }
+
+    .w3-card {
+      background-color: #1b1b1b;
+      border: 1px solid #333;
+      color: #eee;
+    }
+
+    .w3-card h3 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      background-color: #121212;
+      padding: 12px;
+      border-radius: 6px;
+      color: white;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      line-height: 1.6;
+    }
+
+    table {
+      background-color: #0f0f0f;
+      color: white;
+    }
+
+    th {
+      background-color: #222;
+      color: #00e1fff5;
+    }
+
+    td {
+      border-color: #333;
+      background-color: #222;
+    }
+
+    a {
+      color: #00e1fff5;
+    }
+
+    a:hover {
+      color: #ffffff;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top w3-bar w3-black w3-large">
+  <a href="/" class="w3-bar-item w3-button w3-padding-large w3-white">HOME</a>
+  <a href="/analysis" class="w3-bar-item w3-button w3-padding-large">DATA ANALYSIS</a>
+  <a href="/predict_type" class="w3-bar-item w3-button w3-padding-large">PREDICT TYPE</a>
+  <a href="/predict_habitability" class="w3-bar-item w3-button w3-padding-large">PREDICT HABITABILITY</a>
+  <a href="/clustering" class="w3-bar-item w3-button w3-padding-large">CLUSTERING</a>
+  
+</div>
+
+<!-- Hero Image -->
+<header class="w3-display-container hero w3-center">
+  <div class="w3-display-middle">
+    <h1 class="w3-jumbo hero-text">🚀 Exoplanet Explorer</h1>
+    <h2 class="hero-text">Discover, Predict, and Analyze Planets Beyond Our Solar System</h2>
+  </div>
+</header>
+
+<!-- About Section -->
+<div class="w3-container card-section">
+  <div class="w3-content w3-card w3-padding">
+    <h2>About This Project</h2>
+    <p>
+      Exoplanet Explorer is an interactive web platform designed to analyze and predict the characteristics and habitability of exoplanets using real-world NASA datasets. 
+      With the exponential growth in space-based observations, identifying and understanding planets beyond our solar system has become a key area of astronomical and AI research.
+      By combining scientific analysis with intuitive UI, this dashboard serves both as a learning tool for space and data enthusiasts, and as a research-driven exploration of AI's role in space science.
+    </p>
+    <p>
+      The core dataset used here is sourced from: 
+      <a href="https://www.kaggle.com/datasets/adityamishraml/nasaexoplanets" target="_blank">Kaggle - NASA Exoplanets</a><br>
+      File Used: <code>exoplanet_data.csv</code>
+    </p>
+  </div>
+</div>
+
+<!-- Raw Dataset Preview (Collapsible) -->
+<div class="w3-container card-section">
+  <div class="w3-content w3-card w3-padding">
+    <details>
+      <summary><h3>📄 Raw Dataset Preview</h3></summary>
+      <div class="w3-responsive w3-margin-top">
+        <table class="w3-table w3-striped w3-bordered">
+          <thead>
+            <tr>
+              {% for col in summary.head.columns %}
+                <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in summary.head.values %}
+              <tr>
+                {% for cell in row %}
+                  <td>{{ cell }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- Dataset Summary Section -->
+<div class="w3-container card-section">
+  <div class="w3-content">
+    <div class="w3-card w3-padding w3-margin-bottom">
+      <h2>📋 Dataset Info</h2>
+      <pre>{{ summary.info }}</pre>
+    </div>
+
+    <div class="w3-card w3-padding w3-margin-bottom">
+      <h2>Categorical Columns</h2>
+      <ul>
+        {% for col in summary.categorical_columns %}
+          <li>{{ col }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="w3-card w3-padding w3-margin-bottom">
+      <h2>Numerical Columns</h2>
+      <ul>
+        {% for col in summary.numerical_columns %}
+          <li>{{ col }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="w3-card w3-padding w3-margin-bottom">
+      <h2>Missing Values</h2>
+      <ul>
+        {% for col, val in summary.missing_values.items() %}
+          <li>{{ col }}: {{ val }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Cleaned Dataset Preview -->
+<div class="w3-container card-section">
+  <div class="w3-content w3-card w3-padding">
+    <h3>Cleaned Dataset Preview</h3>
+    <p class="w3-text-grey">Missing values handled, units standardized, and derived columns added.</p>
+    <div class="w3-responsive">
+      <table class="w3-table w3-striped w3-bordered">
+        <thead>
+          <tr>
+            {% for col in summary.cleaned_head.columns %}
+              <th>{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in summary.cleaned_head.values %}
+            <tr>
+              {% for cell in row %}
+                <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-64">
+  <p class="w3-text-grey">© Exoplanet Explorer — By Suhani Kulshrestha.</p>
+</footer>
+
+</body>
+</html>

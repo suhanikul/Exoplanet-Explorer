@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clustering Comparison</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- W3.CSS & Fonts -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orbitron|Roboto+Mono&display=swap">
+
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #eeeeee;
+      font-family: 'Lucida Console', monospace;
+      background-image: url("https://t3.ftcdn.net/jpg/05/09/17/06/360_F_509170615_yVX5ICtGA4Y5HMB4toYNLw4RIQAcOgdK.jpg");
+    }
+
+    h1, h2 {
+      color: #00e1fff5;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 50px;
+    }
+
+    .w3-card {
+      background-color: #1b1b1b;
+      border: 1px solid #333;
+      margin: 16px 0;
+      padding: 16px;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    img:hover {
+      opacity: 1;
+    }
+
+    .caption {
+      font-size: 14px;
+      color: #ccc;
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top w3-bar w3-black w3-large">
+  <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+  <a href="/analysis" class="w3-bar-item w3-button w3-padding-large">DATA ANALYSIS</a>
+  <a href="/predict_type" class="w3-bar-item w3-button w3-padding-large">PREDICT TYPE</a>
+  <a href="/predict_habitability" class="w3-bar-item w3-button w3-padding-large">PREDICT HABITABILITY</a>
+  <a href="/clustering" class="w3-bar-item w3-button w3-padding-large w3-white">CLUSTERING</a>
+</div>
+
+<!-- Page Content -->
+<div class="w3-content" style="margin-top:90px">
+
+  <h1>K-Means vs. DBSCAN</h1>
+  <h2>Clustering Habitability Insights</h2>
+  <p style="text-align: center;">Clustering comparison between K-Means (left) and DBSCAN (right) demonstrates DBSCAN's superior ability to identify non-linear, density-driven habitability regions.</p>
+
+  <div class="w3-row-padding w3-margin-top">
+    <div class="w3-half w3-card">
+      <img src="{{ url_for('static', filename='images/habitable_kmean.png') }}" onclick="showModal(this, 'K-Means Clustering: Highlights compact clusters but struggles with noise.')">
+      <div class="caption">K-Means clustering with 3 clusters was selected after applying the Elbow Method (optimal k=4, but 2 clusters had only one data point). 
+        The resulting clusters show limited separability, with overlapping classes and poor alignment to actual habitability boundaries due to K-Means' spherical assumptions.</div>
+    </div>
+    <div class="w3-half w3-card">
+      <img src="{{ url_for('static', filename='images/habitable_dbscan.png') }}" onclick="showModal(this, 'DBSCAN Clustering: Handles noise well and reveals arbitrary shaped clusters.')">
+      <div class="caption">DBSCAN, a density-based clustering algorithm, outperforms K-Means by detecting complex cluster shapes and noise without requiring predefined cluster counts. 
+        It successfully isolates denser habitable zones and adapts better to the irregular spatial distribution of planetary features — making it more suitable for habitability grouping.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imgModal" class="w3-modal" onclick="this.style.display='none'">
+  <span class="w3-button w3-hover-red w3-xxlarge w3-display-topright">&times;</span>
+  <div class="w3-modal-content w3-black w3-center w3-animate-opacity" style="padding:32px">
+    <img id="modalImg" style="max-width:100%; border-radius: 10px;">
+    <p id="modalCaption" class="caption" style="margin-top: 12px;"></p>
+  </div>
+</div>
+
+<!-- Script for Modal -->
+<script>
+  function showModal(img, caption) {
+    document.getElementById('imgModal').style.display = 'block';
+    document.getElementById('modalImg').src = img.src;
+    document.getElementById('modalCaption').textContent = caption;
+  }
+
+  window.onload = function () {
+    const cards = document.querySelectorAll('.w3-card');
+    cards.forEach(card => {
+      const img = card.querySelector('img');
+      const caption = card.querySelector('.caption')?.textContent;
+      if (img && caption) {
+        img.setAttribute('onclick', `showModal(this, \`${caption}\`)`);
+      }
+    });
+  };
+</script>
+
+</body>
+</html>

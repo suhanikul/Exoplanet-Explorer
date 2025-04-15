@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Predict Planet Type</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- W3.CSS -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #eee;
+      font-family: 'Lucida Console', monospace;
+      background-image: url("https://t3.ftcdn.net/jpg/05/09/17/06/360_F_509170615_yVX5ICtGA4Y5HMB4toYNLw4RIQAcOgdK.jpg");
+    }
+
+    h1, h2 {
+      color: #00e1fff5;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    img:hover {
+      opacity: 0.5;
+    }
+
+    .form-card {
+      background-color: #1b1b1b;
+      border: 1px solid #333;
+      color: #eee;
+      box-shadow: 0 0 12px #00e1ff33;
+      padding: 32px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+
+    .w3-input {
+      background-color: #121212;
+      color: #ffffff;
+      border: 1px solid #00e1ff88;
+    }
+
+    .w3-input:focus {
+      outline: none;
+      border-color: #00e1ff;
+      box-shadow: 0 0 8px #00e1ff99;
+    }
+
+    .w3-button:hover {
+      background-color: #fff !important;
+      color: #000 !important;
+    }
+
+    .caption {
+      font-size: 14px;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .prediction-box {
+      background-color: #121212;
+      color: #00e1ff;
+      border: 1px solid #00e1ff;
+      padding: 16px;
+      text-align: center;
+      margin: 20px auto;
+      width: fit-content;
+      border-radius: 10px;
+      font-size: 1.4em;
+      box-shadow: 0 0 10px #00e1ff66;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar (same as homepage) -->
+<div class="w3-top w3-bar w3-black w3-large">
+    <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <a href="/analysis" class="w3-bar-item w3-button w3-padding-large">DATA ANALYSIS</a>
+    <a href="/predict_type" class="w3-bar-item w3-button w3-padding-large w3-white">PREDICT TYPE</a>
+    <a href="/predict_habitability" class="w3-bar-item w3-button w3-padding-large">PREDICT HABITABILITY</a>
+    <a href="/clustering" class="w3-bar-item w3-button w3-padding-large">CLUSTERING</a>
+  </div>  
+
+<!-- Page Content -->
+<div style="margin-top:90px">
+  <h1>Planet Type Prediction</h1>
+
+  {% if not prediction %}
+  <!-- 🔍 Form -->
+  <form method="POST" class="form-card">
+    <div class="w3-section">
+      <label class="w3-text-cyan">Mass (Earth units)</label>
+      <input class="w3-input w3-round" type="number" name="mass" value="{{ mass }}" min="0" step="any" required>
+    </div>
+    <div class="w3-section">
+      <label class="w3-text-cyan">Radius (Earth units)</label>
+      <input class="w3-input w3-round" type="number" name="radius" value="{{ radius }}" min="0" step="any" required>
+    </div>
+    <div class="w3-section">
+      <label class="w3-text-cyan">Orbital Radius (AU)</label>
+      <input class="w3-input w3-round" type="number" name="orbital_radius" value="{{ orbital_radius }}" min="0" step="any" required>
+    </div>
+    <button class="w3-button w3-round w3-block" type="submit">🔮 Predict</button>
+  </form>
+  {% endif %}
+
+  {% if prediction %}
+  <div class="w3-center" style="margin-top: 20px;">
+    <a href="{{ url_for('predict_type') }}" class="w3-button w3-round w3-large" style="background-color:#00e1ff; color:#fff;"> Try Again</a>
+  </div>
+{% endif %}
+
+
+  <!-- ✨ Highlighted Prediction Result -->
+  {% if prediction %}
+    <div class="prediction-box">Prediction: {{ prediction }}</div>
+  {% endif %}
+
+  <!-- 🛰️ Visualizations Section -->
+  <h2>Visualization Reference</h2>
+  <div class="w3-row-padding w3-margin-top">
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/planet_type_cm.png') }}" onclick="showModal(this, 'Confusion matrix showing predicted vs actual planet types.')">
+      <div class="caption">Confusion matrix shows precise classification with low false positives across planet types.</div>
+    </div>
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/planet_type_cr.png') }}" onclick="showModal(this, 'Classification report summarizing model performance.')">
+      <div class="caption">High F1-scores across categories indicate strong model performance in predicting planet types.</div>
+    </div>
+    <div class="w3-third">
+      <img src="{{ url_for('static', filename='images/planet_type_fimp.png') }}" onclick="showModal(this, 'Feature importance analysis showing top predictors.')">
+      <div class="caption">Feature importance plot identifies mass and radius as dominant variables in classification.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔍 Modal for image preview -->
+<div id="imgModal" class="w3-modal" onclick="this.style.display='none'">
+  <span class="w3-button w3-hover-red w3-xxlarge w3-display-topright">&times;</span>
+  <div class="w3-modal-content w3-black w3-center w3-animate-opacity" style="padding:32px">
+    <img id="modalImg" style="max-width:100%; border-radius: 10px;">
+    <p id="modalCaption" class="caption" style="margin-top: 12px;"></p>
+  </div>
+</div>
+
+<!-- 🔧 Script: Modal Logic & Form Validation -->
+<script>
+  function showModal(img, caption) {
+    document.getElementById('imgModal').style.display = 'block';
+    document.getElementById('modalImg').src = img.src;
+    document.getElementById('modalCaption').textContent = caption;
+  }
+
+  document.querySelector("form").onsubmit = function (e) {
+    const fields = ["mass", "radius", "orbital_radius"];
+    for (let field of fields) {
+      let value = parseFloat(document.querySelector(`[name="${field}"]`).value);
+      if (isNaN(value) || value < 0) {
+        alert(`${field} must be a valid positive number.`);
+        e.preventDefault();
+        return false;
+      }
+    }
+  };
+</script>
+
+</body>
+</html>

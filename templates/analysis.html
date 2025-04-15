@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- W3.CSS Framework -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Orbitron|Roboto+Mono&display=swap">
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #eeeeee;
+      font-family: 'Lucida Console', monospace;
+      background-image: url("https://t3.ftcdn.net/jpg/05/09/17/06/360_F_509170615_yVX5ICtGA4Y5HMB4toYNLw4RIQAcOgdK.jpg");
+    }
+
+      /* Modal Styles */
+    .modal-img {
+        max-width: 100%;
+        border-radius: 6px;
+    }
+
+    h1, h2 {
+      font-family: sans-serif;
+      color: #00e1fff5;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      opacity: 0.85;
+    }
+
+    .caption {
+      font-size: 14px;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .w3-card {
+      background-color: #1b1b1b;
+      border: 1px solid #333;
+      margin-bottom: 32px;
+      padding: 16px;
+    }
+
+    .section {
+      margin-top: 48px;
+    }
+
+    .w3-top {
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar (same as homepage) -->
+<div class="w3-top w3-bar w3-black w3-large">
+  <a href="/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+  <a href="/analysis" class="w3-bar-item w3-button w3-padding-large w3-white">DATA ANALYSIS</a>
+  <a href="/predict_type" class="w3-bar-item w3-button w3-padding-large">PREDICT TYPE</a>
+  <a href="/predict_habitability" class="w3-bar-item w3-button w3-padding-large">PREDICT HABITABILITY</a>
+  <a href="/clustering" class="w3-bar-item w3-button w3-padding-large">CLUSTERING</a>
+</div>
+
+<!-- Main Content -->
+<div class="w3-content" style="margin-top:80px">
+
+  <!-- Section: Distribution Visualizations -->
+  <h1>Distribution Visualizations</h1>
+  <div class="w3-row-padding section">
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/boxplot_gen.png') }}">
+      <div class="caption">Boxplots reveal skewed distributions and outliers in planetary mass, radius, and orbital features.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/boxplot_obi_rad.png') }}">
+      <div class="caption">Distinct orbital radius distributions observed across planet categories, aiding type differentiation.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/heatmap_gen.png') }}">
+      <div class="caption">Correlation matrix indicates strong linear relationships between mass, radius, and orbital parameters.</div>
+    </div>
+  </div>
+
+  <!-- Section: Detection Methods -->
+  <h1>Detection Methods</h1>
+  <div class="w3-row-padding section">
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/detection_method_b.png') }}">
+      <div class="caption">Bar chart highlights the prevalence of the transit method in current detection datasets.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/detection_method_p.png') }}">
+      <div class="caption">Pie chart reinforces the dominance of transit and radial velocity as primary detection techniques.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/mass_dm_radius.png') }}">
+      <div class="caption">Mass-radius relationship varies significantly across detection methods, reflecting observational biases.</div>
+    </div>
+  </div>
+
+  <!-- Section: Planet Type Analysis -->
+  <h1>Planet Type Analysis</h1>
+  <div class="w3-row-padding section">
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/planet_type_b.png') }}">
+      <div class="caption">Super Earth and Neptunian planets constitute the largest portions of the observed dataset.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/planet_type_p.png') }}">
+      <div class="caption">Pie chart confirms the statistical prevalence of intermediate-sized exoplanets.</div>
+    </div>
+    <div class="w3-third w3-card">
+      <img src="{{ url_for('static', filename='images/mass_pt_radius.png') }}">
+      <div class="caption">Clustered mass-radius distributions align with categorical planet types, validating label separability.</div>
+    </div>
+  </div>
+
+  <!-- Section: Discovery Trends -->
+  <h1>Discovery Trends</h1>
+  <div class="w3-row-padding section">
+    <div class="w3-half w3-card">
+      <img src="{{ url_for('static', filename='images/detection_timeline.png') }}">
+      <div class="caption">Discovery rates surged post-2010, coinciding with advancements in space telescope missions like Kepler.</div>
+    </div>
+    <div class="w3-half w3-card">
+      <img src="{{ url_for('static', filename='images/discovery_trends.png') }}">
+      <div class="caption">Trend analysis reveals shifting reliance from radial velocity to transit-based methods over time.</div>
+    </div>
+  </div>
+
+</div>
+<!-- The Modal -->
+<div id="imgModal" class="w3-modal" onclick="this.style.display='none'">
+    <span class="w3-button w3-hover-red w3-xxlarge w3-display-topright">&times;</span>
+    <div class="w3-modal-content w3-black w3-center w3-animate-opacity" style="padding:32px">
+      <img id="modalImg" class="modal-img">
+      <p id="modalCaption" class="caption" style="color:#ccc; margin-top:12px;"></p>
+    </div>
+  </div>
+  
+  <!-- Script to Handle Modal Logic -->
+  <script>
+    function showModal(img, caption) {
+      document.getElementById('imgModal').style.display = 'block';
+      document.getElementById('modalImg').src = img.src;
+      document.getElementById('modalCaption').textContent = caption;
+    }
+  
+    // Attach listeners to all images with data-caption attribute
+    window.onload = function () {
+      const cards = document.querySelectorAll('.w3-card');
+      cards.forEach(card => {
+        const img = card.querySelector('img');
+        const caption = card.querySelector('.caption').textContent;
+        img.setAttribute('onclick', `showModal(this, \`${caption}\`)`);
+      });
+    };
+  </script>
+  
+</body>
+</html>
