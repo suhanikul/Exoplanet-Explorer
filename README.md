@@ -14,7 +14,7 @@ An interactive machine learning-powered web app that analyzes and classifies **e
 ---
 
 ## 🗂 Project Structure
-
+```
 Exoplanet-Explorer/
 ├── index.py                ← Flask application entry point
 ├── app.py                  ← Flask application 
@@ -29,7 +29,7 @@ Exoplanet-Explorer/
 │   ├── planet_type_model.py     ← Exoplanet classification model
 │   └── habitability_model.py   ← Habitability analysis logic
 └── .git/                   ← Git version control files
-
+```
 
 ---
 
